@@ -15,6 +15,10 @@ class PackageRecipient extends Model
         'package_id', 'package_version_id', 'recipient_id', 'sent_by', 'token', 'expires_at',
     ];
 
+    protected $hidden = [
+        'deleted_at', 'updated_at'
+    ];
+
     protected $casts = [
         'expires_at' => 'datetime',
     ];

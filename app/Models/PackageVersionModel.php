@@ -14,6 +14,10 @@ class PackageVersionModel extends Model
         'package_version_id', 'model_id', 'model_snapshot', 'shortlisted'
     ];
 
+    protected $hidden = [
+        'deleted_at', 'updated_at'
+    ];
+
     protected $casts = [
         'model_snapshot' => 'array',
     ];

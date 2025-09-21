@@ -14,11 +14,18 @@ class Package extends Model
         'created_by', 'title', 'description', 'status',
     ];
 
-    public function models()
-    {
-        return $this->belongsToMany(ModelProfile::class, 'package_models')
+    protected $hidden = [
+        'deleted_at', 'updated_at'
+    ];
+
+    public function models() {
+        return $this->belongsToMany(ModelProfile::class, 'package_models', 'package_id', 'model_id')
             ->withPivot('notes')
             ->withTimestamps();
+    }
+
+    public function packageModels() {
+        return $this->hasMany(PackageModel::class);
     }
 
     public function versions()

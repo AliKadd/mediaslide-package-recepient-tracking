@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Comment;
+use App\Models\ModelProfile;
 use App\Models\Package;
+use App\Models\PackageModel;
 use App\Models\PackageVersion;
 use App\Models\PackageVersionModel;
 use App\Models\Recipient;
@@ -30,6 +32,11 @@ class DatabaseSeeder extends Seeder
         $recipients = Recipient::factory(10)->create();
 
         Package::factory(5)
+            ->has(
+                PackageModel::factory()
+                    ->count(3),
+                    'packageModels'
+            )
             ->has(
                 PackageVersion::factory()
                     ->has(

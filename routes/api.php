@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('logout', [AuthController::class,'logout']);
 
     Route::apiResource('packages', PackageController::class);
-    Route::get('packages/{packageVersion}', [PackageController::class, 'getVersion']);
+    Route::get('packages/version/{packageVersion}', [PackageController::class, 'getVersion']);
 
     Route::post('packages/{package}/send', [RecipientController::class, 'sendPackage']);
 

@@ -9,6 +9,7 @@ use App\Models\PackageVersion;
 use App\Models\Recipient;
 use App\Models\RecipientEvent;
 use App\Models\Shortlist;
+use App\Notifications\SendPackageNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -62,7 +63,7 @@ class RecipientController extends Controller
                 'expires_at' => $request->expires_at ? now()->addSeconds(intval($request->expires_at)) : null
             ]);
 
-            $recipient->recipient->notify(new SendPackageNotification($recipient));
+            $packageRecepient->recipient->notify(new SendPackageNotification($recipient));
         });
 
         return response()->json([

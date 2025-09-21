@@ -14,6 +14,10 @@ class PackageVersion extends Model
         'package_id', 'version', 'created_by', 'notes',
     ];
 
+    protected $hidden = [
+        'deleted_at', 'updated_at'
+    ];
+
     public function package() {
         return $this->belongsTo(Package::class);
     }

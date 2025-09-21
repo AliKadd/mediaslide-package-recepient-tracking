@@ -127,7 +127,10 @@ class PackageController extends Controller
 
     public function shortlistModel($token, ModelProfile $modelProfile, Request $request) {
         $pkgRecipient = PackageRecipient::where('token', $token)
-            ->where('expires_at', '>', now())
+            ->where(function ($query) {
+                $query->where('expires_at', '>', now())
+                    ->orWhereNull('expires_at');
+            })
             ->firstOrFail();
 
         $model = PackageVersionModel::where('package_version_id', $pkgRecipient->package_version_id)

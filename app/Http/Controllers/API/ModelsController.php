@@ -4,17 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\ModelProfile;
-use App\Models\Package;
 use App\Models\PackageRecipient;
-use App\Models\PackageVersion;
-use App\Models\Recipient;
 use App\Models\RecipientEvent;
-use App\Models\Shortlist;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 
 class ModelsController extends Controller
 {
@@ -46,7 +39,7 @@ class ModelsController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('models');
+            $path = $request->file('image')->store('models', 'public');
 
             $model->image = $path;
             $model->save();
@@ -58,14 +51,18 @@ class ModelsController extends Controller
         ], 201);
     }
 
-    public function show(ModelProfile $modelProfile) {
+    public function show($id) {
+        $modelProfile = ModelProfile::findOrFail($id);
+
         return response()->json([
             'message' => 'Retrieved Successfully',
             'data' => $modelProfile
         ]);
     }
 
-    public function update(Request $request, ModelProfile $modelProfile) {
+    public function update(Request $request, $id) {
+        $modelProfile = ModelProfile::findOrFail($id);
+
         $modelProfile->update($request->only([
             'name', 'about'
         ]));
@@ -76,7 +73,7 @@ class ModelsController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('models');
+            $path = $request->file('image')->store('models', 'public');
 
             $modelProfile->image = $path;
             $modelProfile->save();
@@ -88,9 +85,10 @@ class ModelsController extends Controller
         ]);
     }
 
-    public function destroy(ModelProfile $modelProfile){
-        $modelProfile->delete();
+    public function destroy($id){
+        $modelProfile = ModelProfile::findOrFail($id);
 
+        $modelProfile->delete();
         return response()->json([
             'message' => 'Deleted Successfully'
         ]);
