@@ -130,7 +130,7 @@ class PackageController extends Controller
             ->where('expires_at', '>', now())
             ->firstOrFail();
 
-        $model = PackageVersionModel::where('package_version_id', $recipient->package_version_id)
+        $model = PackageVersionModel::where('package_version_id', $pkgRecipient->package_version_id)
             ->where('model_id', $modelProfile->id)
             ->firstOrFail();
 
