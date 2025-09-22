@@ -60,7 +60,7 @@ class RecipientController extends Controller
                 'recipient_id' => $recipient->id,
                 'sent_by' => $request->user()->id,
                 'token' => Str::random(40),
-                'expires_at' => $request->expires_at ? now()->addSeconds(intval($request->expires_at)) : null
+                'expires_at' => $request->expires_at ? now()->addSeconds(intval($request->expires_at)) : now()->addMonth()
             ]);
 
             $packageRecepient->recipient->notify(new SendPackageNotification($recipient));
@@ -71,5 +71,5 @@ class RecipientController extends Controller
             'data' => $packageRecepient->load('recipient')
         ], 201);
     }
-    
+
 }
