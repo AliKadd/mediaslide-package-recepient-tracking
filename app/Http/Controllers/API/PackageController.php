@@ -72,7 +72,7 @@ class PackageController extends Controller
         if ($request->filled('model_ids') && is_array($request->model_ids)){
             $package->models()->sync($request->model_ids);
         }
-        
+
         return response()->json([
             'message' => 'Package updated successfully!',
             'data' => $package->load('models')
@@ -112,7 +112,7 @@ class PackageController extends Controller
             'recipient_id' => $packageRecipient->recipient_id,
             'event_type' => 'view_package',
             'data' => json_encode([
-                'ip'=> $request->ip(), 
+                'ip'=> $request->ip(),
                 'user-agent' => $request->userAgent()
             ])
         ]);

@@ -78,7 +78,7 @@ class ModelsController extends Controller
             $modelProfile->image = $path;
             $modelProfile->save();
         }
-        
+
         return response()->json([
             'message' => 'Model updated successfully!',
             'data' => $modelProfile
@@ -94,12 +94,15 @@ class ModelsController extends Controller
         ]);
     }
 
-    public function download($token, modelProfile $modelProfile) {
+    public function download($token, ModelProfile $modelProfile) {
         $pkgRecipient = PackageRecipient::where('token', $token)
-            ->where('expires_at', '>', now())
+            ->where(function ($query) {
+                $query->where('expires_at', '>', now())
+                    ->orWhereNull('expires_at');
+            })
             ->firstOrFail();
 
-        $pdf = Pdf::loadView('pdf.model-profile', compact('model'));
+        $pdf = Pdf::loadView('pdfs.model-profile', compact('modelProfile'));
 
         RecipientEvent::create([
             'package_id' => $pkgRecipient->package_id,

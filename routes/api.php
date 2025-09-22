@@ -11,6 +11,8 @@ Route::post('login', [AuthController::class,'login']);
 Route::prefix('packages')->group(function () {
     Route::get('view/{token}', [PackageController::class, 'showByToken']);
     Route::post('{token}/shortlist/{modelProfile}', [PackageController::class, 'shortlistModel']);
+    Route::post('{token}/comment', [CommentsController::class, 'store']);
+    Route::post('{token}/events/store', [EventsController::class, 'store']);
 });
 Route::get('models/{token}/download/{modelProfile}', [ModelsController::class, 'download']);
 
@@ -24,8 +26,5 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::apiResource('models', ModelsController::class);
 
-    Route::post('comments', [CommentsController::class, 'store']);
     Route::get('comments/{packageVersion}', [CommentsController::class, 'list']);
-
-    Route::post('events/store', [EventsController::class, 'store']);
 });

@@ -27,12 +27,21 @@ return new class extends Migration
             $table->index('model_id');
             $table->index('package_id');
             $table->index('event_type');
+            $table->index('created_at');
 
             $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
             $table->foreign('package_recipient_id')->references('id')->on('package_recipients')->onDelete('cascade');
             $table->foreign('package_version_id')->references('id')->on('package_versions')->onDelete('cascade');
             $table->foreign('model_id')->references('id')->on('models')->onDelete('cascade');
             $table->foreign('recipient_id')->references('id')->on('recipients')->onDelete('cascade');
+
+            DB::statement("
+                ALTER TABLE recipient_events
+                PARTITION BY RANGE COLUMNS(created_at) (
+                    PARTITION p202509 VALUES LESS THAN ('2025-10-01'),
+                    PARTITION pmax VALUES LESS THAN (MAXVALUE)
+                );
+            ");
         });
     }
 

@@ -3,13 +3,21 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\PackageRecipient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class EventsController extends Controller
 {
-    
-    public function store(Request $request) {
+
+    public function store(Request $request, $token) {
+        $pkgRecipient = PackageRecipient::where('token', $token)
+            ->where(function ($query) {
+                $query->where('expires_at', '>', now())
+                    ->orWhereNull('expires_at');
+            })
+            ->firstOrFail();
+
         $events = $request->input('events');
         if (!is_array($events)) {
             return response()->json([
@@ -21,10 +29,10 @@ class EventsController extends Controller
         $now = now();
         foreach ($events as $event) {
             $rows[] = [
-                'package_id' => $event['package_id'] ?? null,
-                'package_version_id' => $event['package_version_id'] ?? null,
-                'package_recipient_id' => $event['package_recipient_id'] ?? null,
-                'recipient_id' => $event['recipient_id'] ?? null,
+                'package_id' => $pkgRecipient->package_id,
+                'package_version_id' => $pkgRecipient->package_version_id,
+                'package_recipient_id' => $pkgRecipient->id,
+                'recipient_id' => $pkgRecipient->recipient_id,
                 'model_id' => $event['model_id'] ?? null,
                 'event_type' => $event['event_type'] ?? null,
                 'data' => isset($event['data']) ? json_encode($event['data']) : null,
